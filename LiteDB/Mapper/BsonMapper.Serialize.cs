@@ -33,91 +33,84 @@ namespace LiteDB
         {
             if (++depth > MAX_DEPTH) throw LiteException.DocumentMaxDepth(MAX_DEPTH, type);
 
-            if (obj == null) return BsonValue.Null;
-
-            Func<object, BsonValue> custom;
-
-            // if is already a bson value
-            if (obj is BsonValue) return new BsonValue((BsonValue)obj);
-
-            // test string - mapper has some special options
-            else if (obj is String)
+            switch (obj)
             {
-                var str = this.TrimWhitespace ? (obj as String).Trim() : (String)obj;
-
-                if (this.EmptyStringToNull && str.Length == 0)
-                {
+                case null:
                     return BsonValue.Null;
-                }
-                else
-                {
-                    return new BsonValue(str);
-                }
-            }
-            // basic Bson data types (cast datatype for better performance optimization)
-            else if (obj is Int32) return new BsonValue((Int32)obj);
-            else if (obj is Int64) return new BsonValue((Int64)obj);
-            else if (obj is Double) return new BsonValue((Double)obj);
-            else if (obj is Decimal) return new BsonValue((Decimal)obj);
-            else if (obj is Byte[]) return new BsonValue((Byte[])obj);
-            else if (obj is ObjectId) return new BsonValue((ObjectId)obj);
-            else if (obj is Guid) return new BsonValue((Guid)obj);
-            else if (obj is Boolean) return new BsonValue((Boolean)obj);
-            else if (obj is DateTime) return new BsonValue((DateTime)obj);
-            // basic .net type to convert to bson
-            else if (obj is Int16 || obj is UInt16 || obj is Byte || obj is SByte)
-            {
-                return new BsonValue(Convert.ToInt32(obj));
-            }
-            else if (obj is UInt32)
-            {
-                return new BsonValue(Convert.ToInt64(obj));
-            }
-            else if (obj is UInt64)
-            {
-                var ulng = ((UInt64)obj);
-                var lng = unchecked((Int64)ulng);
-
-                return new BsonValue(lng);
-            }
-            else if (obj is Single)
-            {
-                return new BsonValue(Convert.ToDouble(obj));
-            }
-            else if (obj is Char || obj is Enum)
-            {
-                return new BsonValue(obj.ToString());
-            }
-            // check if is a custom type
-            else if (_customSerializer.TryGetValue(type, out custom) || _customSerializer.TryGetValue(obj.GetType(), out custom))
-            {
-                return custom(obj);
-            }
-            // for dictionary
-            else if (obj is IDictionary)
-            {
-                // when you are converting Dictionary<string, object>
-                if (type == typeof(object))
-                {
-                    type = obj.GetType();
-                }
+                case BsonValue value:
+                    return new BsonValue(value);
+                case string v:
+                    var str = TrimWhitespace ? v.Trim() : v;
+                    if (EmptyStringToNull && str.Length == 0)
+                        return BsonValue.Null;
+                    else
+                        return new BsonValue(str);
+                case int v:
+                    return new BsonValue(v);
+                case long v:
+                    return new BsonValue(v);
+                case double v:
+                    return new BsonValue(v);
+                case decimal v:
+                    return new BsonValue(v);
+                case byte[] v:
+                    return new BsonValue(v);
+                case ObjectId v:
+                    return new BsonValue(v);
+                case Guid v:
+                    return new BsonValue(v);
+                case bool v:
+                    return new BsonValue(v);
+                case DateTime v:
+                    return new BsonValue(v);
+                case short _:
+                case ushort _:
+                case byte _:
+                case sbyte _:
+                    return new BsonValue(Convert.ToInt32(obj));
+                case uint _:
+                    return new BsonValue(Convert.ToInt64(obj));
+                case ulong ulng:
+                    var lng = unchecked((long)ulng);
+                    return new BsonValue(lng);
+                case float v:
+                    return new BsonValue(Convert.ToDouble(v));
+                case char _:
+                case Enum _:
+                    return new BsonValue(obj.ToString());
+                default:
+                    if (_customSerializer.TryGetValue(type, out var custom) || _customSerializer.TryGetValue(obj.GetType(), out custom))
+                    {
+                        return custom(obj);
+                    }
+                    // for dictionary
+                    else if (obj is IDictionary dictionary)
+                    {
+                        // when you are converting Dictionary<string, object>
+                        if (type == typeof(object))
+                        {
+                            type = obj.GetType();
+                        }
 #if NETFULL
-                var itemType = type.GetGenericArguments()[1];
+                        var itemType = type.GetGenericArguments()[1];
 #else
                 var itemType = type.GetTypeInfo().GenericTypeArguments[1];
 #endif
-                return this.SerializeDictionary(itemType, obj as IDictionary, depth);
+                        return SerializeDictionary(itemType, dictionary, depth);
+                    }
+                    // check if is a list or array
+                    else if (obj is IEnumerable collection)
+                    {
+                        return SerializeArray(Reflection.GetListItemType(obj.GetType()), collection, depth);
+                    }
+                    // otherwise serialize as a plain object
+                    else
+                    {
+                        return SerializeObject(type, obj, depth);
+                    }
             }
-            // check if is a list or array
-            else if (obj is IEnumerable)
-            {
-                return this.SerializeArray(Reflection.GetListItemType(obj.GetType()), obj as IEnumerable, depth);
-            }
-            // otherwise serialize as a plain object
-            else
-            {
-                return this.SerializeObject(type, obj, depth);
-            }
+
+            // if is already a bson value
         }
 
         private BsonArray SerializeArray(Type type, IEnumerable array, int depth)
