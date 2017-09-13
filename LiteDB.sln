@@ -1,15 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26228.9
+VisualStudioVersion = 15.0.26730.12
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB", "LiteDB\LiteDB.csproj", "{9497DA19-1FCA-4C2E-A1AB-8DFAACBC76E1}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB.Tests", "LiteDB.Tests\LiteDB.Tests.csproj", "{DC3C8B07-0FB3-45B3-BE60-04609DBC0208}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteDB.Shell", "LiteDB.Shell\LiteDB.Shell.csproj", "{5C46B331-F4DC-469D-B370-532E67CBA808}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LiteDB.Shell", "LiteDB.Shell\LiteDB.Shell.csproj", "{5C46B331-F4DC-469D-B370-532E67CBA808}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LiteDB.Perf", "LiteDB.Perf\LiteDB.Perf.csproj", "{BC62DA9B-B4DF-4D71-9022-1D89D7A3C9A7}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LiteDB.FSharp", "LiteDB.FSharp\LiteDB.FSharp.fsproj", "{D4BE84D5-058E-4094-8784-CD6AE1D63C0C}"
+EndProject
+Project("{6EC3EE1D-3C4E-46DD-8F32-0CC8E7565705}") = "LiteDB.FSharp.Tests", "LiteDB.FSharp.Tests\LiteDB.FSharp.Tests.fsproj", "{0ECD1E61-D644-4256-AB07-9FD5B5891913}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{3457B1E0-23E7-4F23-9615-C9D2F8B17586}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,8 +39,23 @@ Global
 		{BC62DA9B-B4DF-4D71-9022-1D89D7A3C9A7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BC62DA9B-B4DF-4D71-9022-1D89D7A3C9A7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BC62DA9B-B4DF-4D71-9022-1D89D7A3C9A7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D4BE84D5-058E-4094-8784-CD6AE1D63C0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D4BE84D5-058E-4094-8784-CD6AE1D63C0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D4BE84D5-058E-4094-8784-CD6AE1D63C0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D4BE84D5-058E-4094-8784-CD6AE1D63C0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0ECD1E61-D644-4256-AB07-9FD5B5891913}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0ECD1E61-D644-4256-AB07-9FD5B5891913}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0ECD1E61-D644-4256-AB07-9FD5B5891913}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0ECD1E61-D644-4256-AB07-9FD5B5891913}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{DC3C8B07-0FB3-45B3-BE60-04609DBC0208} = {3457B1E0-23E7-4F23-9615-C9D2F8B17586}
+		{0ECD1E61-D644-4256-AB07-9FD5B5891913} = {3457B1E0-23E7-4F23-9615-C9D2F8B17586}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {93F8418C-A03A-4184-97AC-DDD6B6F5A807}
 	EndGlobalSection
 EndGlobal

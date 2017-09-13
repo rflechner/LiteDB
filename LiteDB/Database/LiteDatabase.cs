@@ -8,7 +8,7 @@ namespace LiteDB
     /// <summary>
     /// The LiteDB database. Used for create a LiteDB instance and use all storage resources. It's the database connection
     /// </summary>
-    public partial class LiteDatabase : IDisposable
+    public class LiteDatabase : IDisposable
     {
 #if NET35
         public static string __DEFINE_NET35 = "";
@@ -25,10 +25,10 @@ namespace LiteDB
 
         #region Properties
 
-        private LazyLoad<LiteEngine> _engine = null;
-        private BsonMapper _mapper = BsonMapper.Global;
-        private Logger _log = null;
-        private ConnectionString _connectionString = null;
+        private readonly LazyLoad<LiteEngine> _engine;
+        private readonly BsonMapper _mapper;
+        private readonly Logger _log;
+        private readonly ConnectionString _connectionString;
 
         /// <summary>
         /// Get logger class instance
@@ -62,9 +62,7 @@ namespace LiteDB
         /// </summary>
         public LiteDatabase(ConnectionString connectionString, BsonMapper mapper = null, Logger log = null)
         {
-            if (connectionString == null) throw new ArgumentNullException("connectionString");
-
-            _connectionString = connectionString;
+            _connectionString = connectionString ?? throw new ArgumentNullException(nameof(connectionString));
             _log = log ?? new Logger();
             _log.Level = _connectionString.Log;
 
