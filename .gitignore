@@ -180,3 +180,6 @@ FakesAssemblies/
 *.lock.json
 *.nuget.props
 *.nuget.targets
+\.idea/\.idea\.LiteDB/\.idea/
+
+\.idea/\.idea\.LiteDB/riderModule\.iml
